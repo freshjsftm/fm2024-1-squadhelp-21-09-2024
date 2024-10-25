@@ -46,3 +46,11 @@ module.exports.createPairTokens = async (payload) => ({
     timeExp: REFRESH_TOKEN_TIME,
   }),
 });
+
+const verifyToken = (token, options) =>
+  verifyJWTPromise(token, options.secret, options);
+
+module.exports.verifyAccessToken = (token, options = {}) =>
+  verifyToken(token, { secret: ACCESS_TOKEN_SECRET, ...options });
+module.exports.verifyRefreshToken = (token, options = {}) =>
+  verifyToken(token, { secret: REFRESH_TOKEN_SECRET, ...options });

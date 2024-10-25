@@ -1,7 +1,8 @@
 const { createPairTokens } = require('../services');
-const { User } = require('../models');
+const { User, RefreshToken } = require('../models');
 const { MAX_DEVICES } = require('../constants');
 const BadRequestError = require('../errors/BadRequestError');
+const TokenError = require('../errors/TokenError');
 
 module.exports.signUp = async (req, res, next) => {
   try {
@@ -37,15 +38,27 @@ module.exports.signIn = async (req, res, next) => {
       user.password = undefined;
       return res.status(200).send({ data: { user, pairTokens } });
     }
-    next(new LogInError()); 
+    next(new LogInError());
   } catch (error) {
     next(error);
   }
 };
 module.exports.refresh = async (req, res, next) => {
   try {
-    // create two tokens
-    // response user with two tokens
+    const {
+      body: { refreshToken },
+    } = req;
+    const instanceRefreshToken = await RefreshToken.findOne({
+      where: { token: refreshToken },
+    });
+    if(!instanceRefreshToken){
+      return next(new TokenError());
+    }
+    const user = await instanceRefreshToken.getUser();
+    const pairTokens = await createPairTokens(user);
+    await instanceRefreshToken.update({ token: pairTokens.refresh });
+    user.password = undefined;
+    res.status(200).send({ data: { user, pairTokens } });
   } catch (error) {
     next(error);
   }
