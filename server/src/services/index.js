@@ -47,10 +47,9 @@ module.exports.createPairTokens = async (payload) => ({
   }),
 });
 
-const verifyToken = (token, options) =>
-  verifyJWTPromise(token, options.secret, options);
+const verifyToken = (token, { secret }) => verifyJWTPromise(token, secret);
 
-module.exports.verifyAccessToken = (token, options = {}) =>
-  verifyToken(token, { secret: ACCESS_TOKEN_SECRET, ...options });
-module.exports.verifyRefreshToken = (token, options = {}) =>
-  verifyToken(token, { secret: REFRESH_TOKEN_SECRET, ...options });
+module.exports.verifyAccessToken = (token) =>
+  verifyToken(token, { secret: ACCESS_TOKEN_SECRET });
+module.exports.verifyRefreshToken = (token) =>
+  verifyToken(token, { secret: REFRESH_TOKEN_SECRET });
