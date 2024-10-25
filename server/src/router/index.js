@@ -12,7 +12,7 @@ const authRouter = require('./authRouter');
 
 const router = express.Router();
 
-route.use('/auth', authRouter);
+router.use('/auth', authRouter);
 
 /*********** */
 router.post(
