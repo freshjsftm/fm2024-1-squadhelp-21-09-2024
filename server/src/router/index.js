@@ -15,13 +15,13 @@ const router = express.Router();
 router.use('/auth', authRouter);
 
 /*********** */
-router.post(
-  '/registration',
-  validators.validateRegistrationData,
-  hashPass,
-  userController.registration
-);
-router.post('/login', validators.validateLogin, userController.login);
+// router.post(
+//   '/registration',
+//   validators.validateRegistrationData,
+//   hashPass,
+//   userController.registration
+// );
+// router.post('/login', validators.validateLogin, userController.login);
 /*********** */
 
 router.post('/getUser', checkAuth);

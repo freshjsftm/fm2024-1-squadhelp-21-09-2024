@@ -27,7 +27,7 @@ module.exports.signIn = async (req, res, next) => {
     const user = await User.findOne({ where: { email } });
     if (user && (await user.comparePassword(password))) {
       const pairTokens = await createPairTokens(user);
-      if ((await user.countRefreshToken) >= MAX_DEVICES) {
+      if ((await user.countRefreshTokens()) >= MAX_DEVICES) {
         const [oldestToken] = await user.getRefreshTokens({
           order: [['updatedAt', 'ASC']],
         });
