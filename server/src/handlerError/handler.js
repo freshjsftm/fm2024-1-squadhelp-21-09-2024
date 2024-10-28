@@ -1,3 +1,5 @@
+const { TokenExpiredError } = require("jsonwebtoken");
+
 module.exports = (err, req, res, next) => {
   console.log(err);
   if (err.message ===
@@ -6,6 +8,9 @@ module.exports = (err, req, res, next) => {
     'new row for relation "Users" violates check constraint "Users_balance_ck"') {
     err.message = 'Not Enough money';
     err.code = 406;
+  }
+  if(err instanceof TokenExpiredError){
+    res.status(408).send('Token error!!!');
   }
   if (!err.message || !err.code) {
     res.status(500).send('Server Error');
